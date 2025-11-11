@@ -49,3 +49,11 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 // Export the User model so it can be used in other parts of the application
 module.exports = mongoose.model('User', userSchema);
+
+const bcrypt = require('bcryptjs');
+
+userSchema.pre('save', async function () {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+});
