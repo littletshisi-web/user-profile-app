@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> <!-- Set character encoding to UTF-8 for universal character support -->
+  <title>User Profile</title> <!-- Page title shown in browser tab -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensure responsive layout on mobile devices -->
+
+  <!-- Include Bootstrap CSS for responsive design and prebuilt UI components -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Include Font Awesome for scalable vector icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* Apply a soft gradient background to the entire page */
+    body {
+      background: linear-gradient(135deg, #f0bacf 0%, #c99aae 50%, #d8bcca 100%);
+      min-height: 100vh; /* Ensure the body takes full viewport height */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Use a clean, readable font stack */
+      padding: 2rem 0; /* Add vertical padding to separate content from edges */
+    }
+  
+    
+    .profile-container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(228, 182, 207, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+      border: 1px solid rgb(236, 156, 196);
+      position: relative;
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #46a6be42;
+    }
+    
+    /* Container for the profile header section */
+.profile-header {
+  text-align: center; /* Center-aligns all text inside the header */
+  margin-bottom: 2.5rem; /* Adds space below the header */
+  padding-bottom: 1.5rem; /* Adds space inside the bottom of the header */
+  border-bottom: 2px solid #0e0101; /* Creates a light bottom border for visual separation */
+}
+
+/* Circular avatar container with gradient background */
+.profile-avatar {
+  width: 80px; /* Fixed width for the avatar */
+  height: 80px; /* Fixed height for the avatar */
+  background: linear-gradient(135deg, #e70074 0%, #f3a8d1 100%); /* Diagonal gradient from tan to wheat */
+  border-radius: 50%; /* Makes the avatar perfectly circular */
+  display: flex; /* Enables flexbox for centering content */
+  align-items: center; /* Vertically centers content inside the avatar */
+  justify-content: center; /* Horizontally centers content inside the avatar */
+  margin: 0 auto 1rem; /* Centers the avatar horizontally and adds space below */
+  font-size: 2rem; /* Enlarges any icon or text inside the avatar */
+  color: white; /* Sets text/icon color to white for contrast */
+  box-shadow: 0 10px 25px rgba(168, 115, 135, 0.24); /* Adds a soft shadow for depth */
+}
+
+/* Main title text below the avatar */
+.profile-title {
+  color: #333; /* Dark gray text for strong readability */
+  font-weight: 700; /* Bold font for emphasis */
+  margin-bottom: 0.5rem; /* Adds space below the title */
+  font-size: 1.8rem; /* Slightly larger font size for prominence */
+}
+
+/* Subtitle text below the main title */
+.profile-subtitle {
+  color: #666; /* Medium gray for a softer look */
+  font-size: 1rem; /* Standard readable font size */
+}
+    
+   /* Adds spacing below each floating form group */
+.form-floating {
+  margin-bottom: 1.5rem; /* Creates vertical spacing between form fields */
+}
+
+/* Styles the input fields inside floating labels */
+.form-floating input {
+  border: 2px solid #e9ecef; /* Light gray border for subtle framing */
+  border-radius: 15px; /* Rounded corners for a soft, modern look */
+  padding: 1rem 0.75rem 1rem 3.5rem; /* Extra left padding to make space for icons */
+  transition: all 0.3s ease; /* Smooth transition for hover/focus effects */
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
+}
+
+/* Enhances input appearance when focused */
+.form-floating input:focus {
+  border-color: #d2b48c; /* Tan border to match brand color on focus */
+  box-shadow: 0 0 0 0.2rem rgba(210, 180, 140, 0.25); /* Soft glow effect around input */
+  background: white; /* Solid white background for clarity while typing */
+}
+
+/* Positions and styles the icon inside the input field */
+.input-icon {
+  position: absolute; /* Allows precise placement inside input */
+  left: 1.25rem; /* Distance from the left edge of the input */
+  top: 50%; /* Vertically centers the icon */
+  transform: translateY(-50%); /* Perfect vertical centering */
+  color: #d2b48c; /* Tan color to match branding */
+  z-index: 3; /* Ensures icon appears above input background */
+  font-size: 0.9rem; /* Slightly smaller icon size for subtlety */
+}
+
+/* Styles the save button */
+.btn-save {
+  background: linear-gradient(135deg, #d2b48c 0%, #f5deb3 100%); /* Gradient from tan to wheat */
+  border: none; /* Removes default button border */
+  border-radius: 15px; /* Rounded corners for a friendly look */
+  padding: 0.75rem 2rem; /* Comfortable padding for click area */
+  font-weight: 600; /* Semi-bold text for emphasis */
+  font-size: 1.1rem; /* Slightly larger font for readability */
+  color: #333; /* Dark text for contrast */
+  width: 100%; /* Full-width button for consistency */
+  transition: all 0.3s ease; /* Smooth hover/active transitions */
+  position: relative; /* Allows layering effects if needed */
+  overflow: hidden; /* Prevents content spillover */
+}
+
+/* Adds hover effect to the save button */
+.btn-save:hover {
+  transform: translateY(-2px); /* Slight upward movement for interactivity */
+  box-shadow: 0 10px 25px rgba(210, 180, 140, 0.4); /* Stronger shadow for depth */
+  color: #333; /* Maintains text color on hover */
+}
+
+/* Resets button position when clicked */
+.btn-save:active {
+  transform: translateY(0); /* Returns to original position on click */
+}
+
+    
+ /* Styles the logout button */
+.btn-logout {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%); /* Gradient from coral to light pink */
+  border: none; /* Removes default border */
+  border-radius: 15px; /* Rounded corners for a soft look */
+  padding: 0.5rem 1.5rem; /* Comfortable click area */
+  font-weight: 600; /* Semi-bold text for emphasis */
+  color: white; /* White text for contrast against red background */
+  transition: all 0.3s ease; /* Smooth hover/active transitions */
+  position: absolute; /* Allows precise placement on the page */
+  top: 1rem; /* Distance from the top edge */
+  right: 1rem; /* Distance from the right edge */
+}
+
+/* Adds hover effect to the logout button */
+.btn-logout:hover {
+  transform: translateY(-2px); /* Slight upward movement for interactivity */
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4); /* Soft red shadow for depth */
+  color: white; /* Maintains white text on hover */
+}
+
+/* Base styling for alert messages */
+.alert {
+  border-radius: 15px; /* Rounded corners for a friendly look */
+  border: none; /* Removes default border */
+  margin-top: 1rem; /* Adds spacing above the alert */
+  padding: 1rem; /* Comfortable padding inside the alert */
+}
+
+/* Styles for success alerts */
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); /* Soft green gradient for success */
+  color: #155724; /* Dark green text for readability */
+}
+
+/* Styles for error/danger alerts */
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); /* Soft red gradient for errors */
+  color: #721c24; /* Dark red text for emphasis */
+}
+    
+    /* Styles the container for each form section */
+.form-section {
+  background: rgba(255, 255, 255, 0.5); /* Semi-transparent white background for soft layering */
+  border-radius: 15px; /* Rounded corners for a friendly, modern look */
+  padding: 2rem; /* Spacious padding for comfortable layout */
+  margin-bottom: 1.5rem; /* Adds spacing between stacked sections */
+  border: 1px solid rgba(255, 154, 158, 0.2); /* Subtle pink border for visual framing */
+}
+
+/* Styles the title of each form section */
+.section-title {
+  color: #333; /* Dark gray text for strong readability */
+  font-weight: 600; /* Semi-bold for emphasis */
+  margin-bottom: 1.5rem; /* Space below the title */
+  font-size: 1.2rem; /* Slightly larger font for prominence */
+  display: flex; /* Enables horizontal alignment with icon */
+  align-items: center; /* Vertically centers icon and text */
+}
+
+/* Styles the icon inside the section title */
+.section-title i {
+  margin-right: 0.5rem; /* Space between icon and text */
+  color: #d2b48c; /* Tan color to match brand palette */
+}
+
+/* Applies floating animation to elements */
+.floating-animation {
+  animation: float 3s ease-in-out infinite; /* Smooth up-and-down loop */
+}
+
+/* Defines the floating animation keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); } /* Start and end at original position */
+  50% { transform: translateY(-10px); } /* Float upward at midpoint */
+}
+
+/* Hides the loading spinner by default */
+.loading-spinner {
+  display: none; /* Spinner is hidden until loading state is triggered */
+}
+
+/* Shows the spinner when parent has 'loading' class */
+.loading .loading-spinner {
+  display: inline-block; /* Makes spinner visible during loading */
+}
+
+/* Hides button text when loading */
+.loading .btn-text {
+  display: none; /* Prevents overlap with spinner during loading */
+}
+    
+    /* Styles the welcome message banner */
+.welcome-message {
+  background: linear-gradient(135deg, #d2b48c 0%, #f5deb3 100%); /* Tan-to-wheat gradient for warmth */
+  color: white; /* White text for contrast */
+  padding: 1rem 1.5rem; /* Comfortable spacing inside the banner */
+  border-radius: 15px; /* Rounded corners for a friendly look */
+  margin-bottom: 2rem; /* Space below the banner */
+  text-align: center; /* Center-aligns the message */
+  box-shadow: 0 5px 15px rgba(210, 180, 140, 0.3); /* Soft shadow for depth */
+}
+  </style>
+</head>
+<body>
+  <!-- Main profile container -->
+<div class="profile-container">
+
+  <!-- Logout Button (top-right corner) -->
+  <button id="logoutBtn" class="btn btn-logout">
+    <i class="fas fa-sign-out-alt me-2"></i>Logout
+  </button>
+
+  <!-- Profile Header Section -->
+  <div class="profile-header">
+    <!-- Circular avatar with user icon -->
+    <div class="profile-avatar">
+      <i class="fas fa-user"></i>
+    </div>
+    <!-- Greeting title -->
+    <h2 class="profile-title" id="username">Welcome</h2>
+    <!-- Subtitle for context -->
+    <p class="profile-subtitle">Manage your profile information</p>
+  </div>
+
+  <!-- Welcome Message Banner -->
+  <div class="welcome-message">
+    <i class="fas fa-heart me-2"></i>
+    Welcome back! Update your profile information below.
+  </div>
+
+  <!-- Profile Form Section -->
+  <div class="form-section">
+    <!-- Section title with icon -->
+    <h4 class="section-title">
+      <i class="fas fa-user-edit"></i>
+      Profile Information
+    </h4>
+
+    <!-- Profile Form -->
+    <form id="profileForm">
+
+      <!-- Email Field with Icon -->
+      <div class="form-floating position-relative">
+        <i class="fas fa-envelope input-icon"></i>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Email address" required>
+        <label for="email">Email address</label>
+      </div>
+
+      <!-- Phone Field with Icon -->
+      <div class="form-floating position-relative">
+        <i class="fas fa-phone input-icon"></i>
+        <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" required>
+        <label for="phone">Phone number</label>
+      </div>
+
+      <!-- Date of Birth Field with Icon -->
+      <div class="form-floating position-relative">
+        <i class="fas fa-calendar input-icon"></i>
+        <input type="date" class="form-control" name="dob" id="dob" placeholder="Date of birth" required>
+        <label for="dob">Date of birth</label>
+      </div>
+
+      <!-- Save Button with Loading Spinner -->
+      <button type="submit" class="btn btn-save">
+        <span class="btn-text">
+          <i class="fas fa-save me-2"></i>Save Changes
+        </span>
+        <span class="loading-spinner">
+          <i class="fas fa-spinner fa-spin me-2"></i>Saving...
+        </span>
+      </button>
+
+      <!-- Message Alert (hidden by default) -->
+      <div id="message" class="alert" style="display:none;"></div>
+
+    </form>
+  </div>
+</div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Extract token from URL query string and store it in localStorage
+    const urlToken = new URLSearchParams(window.location.search).get('token');
+    if (urlToken) localStorage.setItem('token', urlToken);
+
+    // Retrieve token from localStorage or sessionStorage
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    // If no token is found, show an error message and block access
+    if (!token) {
+      document.body.innerHTML = `
+        <div class="profile-container">
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>No token provided. Please login first.
+          </div>
+        </div>`;
+      return;
+    }
+
+    // Fetch user data and populate the form
+    async function loadUser() {
+      try {
+        const res = await fetch('/getUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({})
+        });
+
+        if (!res.ok) {
+          const msg = document.getElementById('message');
+          msg.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Failed to load user data';
+          msg.className = 'alert alert-danger';
+          msg.style.display = 'block';
+          return;
+        }
+
+        const user = await res.json();
+        document.getElementById('username').textContent = `Welcome, ${user.username}`;
+        document.querySelector('[name=email]').value = user.email || '';
+        document.querySelector('[name=phone]').value = user.phone || '';
+        document.querySelector('[name=dob]').value = user.dob ? user.dob.split('T')[0] : '';
+      } catch (error) {
+        console.error('Error loading user:', error);
+        const msg = document.getElementById('message');
+        msg.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error loading profile';
+        msg.className = 'alert alert-danger';
+        msg.style.display = 'block';
+      }
+    }
+
+    // Load user data on page load
+    loadUser();
+
+    // Handle form submission to update profile
+    document.getElementById('profileForm').onsubmit = async (e) => {
+      e.preventDefault(); // Prevent default form behavior
+      const submitBtn = document.querySelector('.btn-save');
+      submitBtn.classList.add('loading'); // Show loading spinner
+
+      try {
+        const form = new FormData(e.target);
+        const payload = Object.fromEntries(form.entries());
+
+        const res = await fetch('/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const msg = document.getElementById('message');
+        const responseText = await res.text();
+
+        if (res.ok) {
+          msg.innerHTML = '<i class="fas fa-check-circle me-2"></i>Profile updated successfully!';
+          msg.className = 'alert alert-success';
+        } else {
+          msg.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + responseText;
+          msg.className = 'alert alert-danger';
+        }
+
+        msg.style.display = 'block';
+
+        if (res.ok) {
+          setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        const msg = document.getElementById('message');
+        msg.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error updating profile';
+        msg.className = 'alert alert-danger';
+        msg.style.display = 'block';
+      } finally {
+        submitBtn.classList.remove('loading'); // Hide loading spinner
+      }
+    };
+
+    // Handle logout: clear token and redirect to home
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      window.location.href = '/';
+    };
+  });
+  </script>
+</body>
+</html>

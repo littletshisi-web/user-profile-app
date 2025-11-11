@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap CSS for responsive styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    /* Set a light background for the page */
+    body {
+      background-color: #f1bce9;
+    }
+
+    /* Center the login form and style it */
+    .login-container {
+      max-width: 400px;              /* Limit form width */
+      margin: auto;                  /* Center horizontally */
+      margin-top: 10vh;              /* Add vertical spacing from top */
+      padding: 2rem;                 /* Add internal spacing */
+      background: rgb(240, 191, 221);            /* White background for contrast */
+      border-radius: 8px;            /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    }
+
+    /* Hide error message by default */
+    #error-message {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login form container -->
+  <div class="login-container">
+    <h4 class="text-center mb-4">Login</h4>
+
+    <!-- Login form -->
+    <form id="loginForm">
+      <!-- Username input -->
+      <div class="mb-3">
+        <input type="text" name="username" class="form-control" placeholder="Username" required>
+      </div>
+
+      <!-- Password input with toggle button -->
+      <div class="mb-3 position-relative">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <button type="button" id="togglePassword" class="btn btn-sm btn-outline-secondary position-absolute end-0 top-0 mt-2 me-2">Show</button>
+      </div>
+
+      <!-- Remember Me checkbox -->
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Remember Me</label>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+
+      <!-- Error message display -->
+      <div id="error-message" class="text-danger mt-3 text-center">Invalid credentials</div>
+    </form>
+  </div>
+
+  <script>
+    // Toggle password visibility when "Show/Hide" button is clicked
+    document.getElementById('togglePassword').onclick = () => {
+      const passwordInput = document.getElementById('password');
+      const toggleBtn = document.getElementById('togglePassword');
+      const isHidden = passwordInput.type === 'password';
+
+      // Switch input type and button label
+      passwordInput.type = isHidden ? 'text' : 'password';
+      toggleBtn.textContent = isHidden ? 'Hide' : 'Show';
+    };
+
+    // Handle login form submission
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault(); // Prevent default form submission
+
+      const form = new FormData(e.target); // Collect form data
+      const rememberMe = document.getElementById('rememberMe').checked; // Check if "Remember Me" is selected
+
+      // Send login request to server
+      const res = await fetch('/login', {
+        method: 'POST',
+        body: form
+      });
+
+      if (res.ok) {
+        // If login is successful, store token based on "Remember Me" choice
+        const { token } = await res.json();
+        if (rememberMe) {
+          localStorage.setItem('token', token); // Persistent storage
+        } else {
+          sessionStorage.setItem('token', token); // Session-only storage
+        }
+
+        // Redirect to profile page
+        window.location.href = '/profile';
+      } else {
+        // Show error message if login fails
+        document.getElementById('error-message').style.display = 'block';
+      }
+    };
+  </script>
+</body>
+</html>

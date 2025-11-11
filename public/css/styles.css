@@ -1,0 +1,48 @@
+/* Apply styles to the entire page body */
+body {
+  font-family: sans-serif;       /* Use a clean, modern sans-serif font */
+  display: flex;                 /* Enable Flexbox layout for centering */
+  justify-content: center;      /* Horizontally center content */
+  align-items: center;          /* Vertically center content */
+  height: 100vh;                /* Make body take full viewport height */
+  overflow: auto;               /* Allow scrolling if content overflows */
+  margin: 0;                    /* Remove default body margin */
+  background-color: #f9f9f9;    /* Light background for contrast */
+}
+
+/* Style the form container */
+form {
+  display: flex;                /* Use Flexbox for layout */
+  flex-direction: column;      /* Stack form elements vertically */
+  gap: 10px;                    /* Add spacing between form elements */
+  max-width: 400px;            /* Prevent form from stretching too wide */
+  width: 100%;                 /* Allow responsive scaling */
+  padding: 0 20px;             /* Add horizontal padding */
+  background-color: #fff;      /* White background for form */
+  border-radius: 8px;          /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Style both input fields and buttons */
+input, button {
+  padding: 10px;                /* Add space inside elements for better usability */
+  font-size: 1em;               /* Set readable font size */
+  border: 1px solid #ccc;       /* Light border for inputs */
+  border-radius: 4px;           /* Rounded corners */
+}
+
+/* Button-specific styling */
+button {
+  background-color: #007BFF;   /* Primary blue background */
+  color: white;                /* White text */
+  border: none;                /* Remove default border */
+  cursor: pointer;             /* Pointer cursor on hover */
+  transition: background-color 0.3s ease;
+}
+
+/* Interaction styles */
+input:focus, button:hover {
+  outline: none;
+  border: 2px solid #007BFF;   /* Highlight border on focus/hover */
+  background-color: #f0f8ff;   /* Light blue background on interaction */
+}

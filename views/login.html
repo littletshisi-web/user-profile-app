@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - User Profile App</title><!-- Bootstrap CSS --><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><!-- Font Awesome for icons --><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"><style>body {background: linear-gradient(135deg, #f5f5dc 0%, #faf0e6 50%, #faf0e6 100%);min-height: 100vh;display: flex;align-items: center;justify-content: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}.login-container {background: rgba(255, 255, 255, 0.95);backdrop-filter: blur(10px);border-radius: 20px;box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);padding: 3rem;width: 100%;max-width: 400px;border: 1px solid rgba(255, 255, 255, 0.2);}.login-header {text-align: center;margin-bottom: 2rem;}.login-header h2 {color: #333;font-weight: 700;margin-bottom: 0.5rem;}.login-header p {color: #666;font-size: 0.9rem;}.form-floating {margin-bottom: 1.5rem;}.form-floating input {border: 2px solid #e9ecef;border-radius: 10px;padding: 1rem 0.75rem 1rem 3.5rem;transition: all 0.3s ease;}.form-floating input:focus {border-color: #d2b48c;box-shadow: 0 0 0 0.2rem rgba(210, 180, 140, 0.25);}.input-icon {position: absolute;left: 1.25rem;top: 50%;transform: translateY(-50%);color: #6c757d;z-index: 3;font-size: 0.9rem;}
+
+    /* ✅ Primary login button styling */
+    .btn-login {
+      background: linear-gradient(135deg, #d2b48c 0%, #f5deb3 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #333;
+      width: 100%;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(210, 180, 140, 0.4);
+      color: #333;
+    }
+    
+    .btn-login:active {
+      transform: translateY(0);
+    }
+    
+    /* ✅ Secondary button styling for links */
+    .btn-login-link {
+      background: transparent;
+      border: 2px solid #d2b48c;
+      border-radius: 10px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #d2b48c;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    
+    .btn-login-link:hover {
+      background: #d2b48c;
+      color: white;
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+    
+    /* ✅ Alert message styling */
+    .alert {
+      border-radius: 10px;
+      border: none;
+      margin-top: 1rem;
+    }
+    
+    /* ✅ Demo credentials box styling */
+    .demo-credentials {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-left: 4px solid #d2b48c;
+    }
+    
+    .demo-credentials h6 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .demo-credentials p {
+      color: #666;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+    
+    /* ✅ Hidden state for error messages */
+    .hidden {
+      display: none !important;
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- Login Container -->
+<div class="login-container">
+  <!-- Header Section -->
+  <div class="login-header">
+    <i class="fas fa-user-circle fa-3x text-primary mb-3"></i> <!-- User icon -->
+    <h2>Welcome Back</h2> <!-- Main heading -->
+    <p>Sign in to your account</p> <!-- Subheading -->
+  </div>
+
+  <!-- Login Form -->
+  <form action="/login" method="POST" id="loginForm">
+    <!-- Username Field -->
+    <div class="form-floating position-relative">
+      <i class="fas fa-user input-icon"></i> <!-- Icon inside input -->
+      <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+      <label for="username">Username</label>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-floating position-relative">
+      <i class="fas fa-lock input-icon"></i> <!-- Icon inside input -->
+      <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+      <label for="password">Password</label>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-login">
+      <i class="fas fa-sign-in-alt me-2"></i>Sign In
+    </button>
+
+     <!-- Error Message (hidden by default) -->
+     <div id="error" class="alert alert-danger hidden">
+       <i class="fas fa-exclamation-triangle me-2"></i>Invalid credentials. Please try again.
+     </div>
+  </form>
+
+  <!-- Demo Credentials Section -->
+  <div class="demo-credentials">
+    <h6><i class="fas fa-info-circle me-2"></i>Demo Credentials</h6>
+    <p><strong>Username:</strong> testuser</p>
+    <p><strong>Password:</strong> testpass</p>
+  </div>
+
+  <!-- Registration Link -->
+  <a href="/register" class="btn btn-login-link">
+    <i class="fas fa-user-plus me-2"></i>Don't have an account? Create One
+  </a>
+</div>
+
+<script>
+  // Wait until the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+
+     // Show loading spinner on form submission
+     form.addEventListener('submit', function (e) {
+       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing In...';
+       submitBtn.disabled = true;
+       errorDiv.classList.add('hidden');
+
+       // Reset button after 3 seconds (fallback in case of no response)
+       setTimeout(() => {
+         submitBtn.innerHTML = originalBtnText;
+         submitBtn.disabled = false;
+       }, 3000);
+     });
+
+    // Display error messages based on URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorType = urlParams.get('error');
+
+     if (errorType === '1') {
+       errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Invalid credentials. Please try again.';
+       errorDiv.classList.remove('hidden');
+     } else if (errorType === '2') {
+       errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Account not found. Please check your username.';
+       errorDiv.classList.remove('hidden');
+     } else if (errorType === '3') {
+       errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Server error. Please try again later.';
+       errorDiv.classList.remove('hidden');
+     }
+
+    // Real-time input validation and styling
+    const inputs = form.querySelectorAll('input[required]');
+    inputs.forEach(input => {
+      input.addEventListener('input', function () {
+        this.style.borderColor = this.value.trim() === '' ? '#dc3545' : '#e9ecef';
+      });
+
+      input.addEventListener('focus', function () {
+        this.parentElement.style.transform = 'scale(1.02)';
+        this.style.borderColor = '#d2b48c';
+      });
+
+      input.addEventListener('blur', function () {
+        this.parentElement.style.transform = 'scale(1)';
+        this.style.borderColor = this.value.trim() === '' ? '#dc3545' : '#e9ecef';
+      });
+    });
+
+    // Final validation before form submission
+    form.addEventListener('submit', function (e) {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+       if (!username || !password) {
+         e.preventDefault();
+         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Please fill in all fields.';
+         errorDiv.classList.remove('hidden');
+         return false;
+       }
+
+       if (username.length < 3) {
+         e.preventDefault();
+         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Username must be at least 3 characters long.';
+         errorDiv.classList.remove('hidden');
+         return false;
+       }
+
+       if (password.length < 6) {
+         e.preventDefault();
+         errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Password must be at least 6 characters long.';
+         errorDiv.classList.remove('hidden');
+         return false;
+       }
+    });
+  });
+</script>

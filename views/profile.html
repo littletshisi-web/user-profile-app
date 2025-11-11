@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+
+  <!-- Link to external stylesheet for styling -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Greeting header that will be dynamically updated with the user's name -->
+  <h2 id="username">Welcome</h2>
+
+  <!-- Profile update form -->
+  <form id="profileForm">
+    <!-- Email input field -->
+    <input name="email" placeholder="Email">
+
+    <!-- Phone number input field -->
+    <input name="phone" placeholder="Phone">
+
+    <!-- Date of birth input field -->
+    <input name="dob" type="date">
+
+    <!-- Submit button to save profile changes -->
+    <button type="submit">Save</button>
+
+    <!-- Message container for success or error feedback -->
+    <div id="message" style="display:none;"></div>
+  </form>
+
+  <!-- Link to external JavaScript file for dynamic behavior -->
+  <script src="/js/main.js"></script>
+</body>
+</html>
