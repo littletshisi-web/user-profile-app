@@ -27,18 +27,47 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Validate critical environment variables early to give clear errors
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  console.error('\n✗ Fatal: MONGO_URI is not set. The app cannot connect to MongoDB without a valid connection string.');
+  console.error('  - Create a `.env` file based on `.env.example` and set MONGO_URI.');
+  console.error('  - Or set the environment variable MONGO_URI before starting the app.');
+  console.error('  Example (PowerShell): $env:MONGO_URI = "mongodb+srv://user:pass@cluster0.../dbname"; npm start\n');
+  process.exit(1);
+}
+
+// Detect obviously-placeholder connection strings and fail with a clear message
+// Check for literal angle brackets (e.g., <username>, <password>) which indicate unfilled placeholders
+const hasAngleBrackets = MONGO_URI.includes('<') && MONGO_URI.includes('>');
+if (hasAngleBrackets) {
+  console.error('\n✗ Fatal: MONGO_URI appears to contain placeholder values.');
+  console.error('  - The connection string in your .env has unfilled placeholders like <username> or <password>.');
+  console.error('  - Open `.env` and replace these with your actual Atlas credentials.');
+  console.error('  - To use a local MongoDB instead, set MONGO_URI=mongodb://localhost:27017/user-profile-app');
+  console.error('  Example (PowerShell): $env:MONGO_URI = "mongodb+srv://<dbUser>:<dbPass>@cluster0.xxxxx.mongodb.net/user-profile-app?retryWrites=true&w=majority"\n');
+  process.exit(1);
+}
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+app.use((req, res, next) => {
+  res.locals.csrfToken = crypto.randomBytes(32).toString('hex');
+  res.cookie('csrfToken', res.locals.csrfToken, { httpOnly: false, sameSite: 'lax' });
+  next();
+});
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-console.log('Connecting to MongoDB:', process.env.MONGO_URI);
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+console.log('Connecting to MongoDB:', MONGO_URI);
+
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   // Note: MongoDB Atlas URIs (mongodb+srv://) automatically enforce TLS/SSL encryption
   .then(() => {
     console.log('✓ Connected to MongoDB successfully');
