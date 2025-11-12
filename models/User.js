@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Import bcrypt for hashing passwords securely
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Define the schema for a User document in MongoDB
 const userSchema = new mongoose.Schema({
@@ -49,11 +49,3 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 // Export the User model so it can be used in other parts of the application
 module.exports = mongoose.model('User', userSchema);
-
-const bcrypt = require('bcryptjs');
-
-userSchema.pre('save', async function () {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-});

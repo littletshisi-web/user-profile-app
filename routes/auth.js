@@ -1,6 +1,26 @@
+/*
+  routes/auth.js
+  - Authentication and profile-related HTTP endpoints
+  - Keep route handlers thin: heavy lifting (validation, DB logic)
+    should live in services or model methods when the app grows.
+  - Routes provided:
+      GET  /           -> Login page
+      GET  /register   -> Registration page
+      GET  /profile    -> Profile UI
+      POST /login      -> Authenticate and set HttpOnly JWT cookie
+      POST /register   -> Create account and set cookie
+      POST /getUser    -> Return profile data for authenticated user
+      POST /update     -> Update profile fields for authenticated user
+      POST /logout     -> Clear authentication cookie
+
+  Security notes:
+    - JWT stored in HttpOnly cookie to mitigate XSS token theft.
+    - In production, ensure NODE_ENV=production so cookies are set secure.
+    - Consider CSRF protections (sameSite, double-submit cookie, or CSRF token)
+*/
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const path = require('path');
 const router = express.Router();
@@ -38,15 +58,23 @@ router.post('/login', async (req, res) => {
   // Generate JWT token
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-  // Redirect to profile page with token in query string
-  res.redirect(`/profile?token=${token}`);
+  // Set token as HttpOnly cookie and redirect to profile
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  });
+  res.redirect('/profile');
 });
 
 /* ===========================
    Fetch User Profile Data
 =========================== */
 router.post('/getUser', async (req, res) => {
-  const { token } = req.body;
+  // Try cookie, then Authorization header, then body
+  const header = req.get('Authorization') || '';
+  const token = req.cookies?.token || (header.startsWith('Bearer ') ? header.slice(7) : req.body.token);
 
   // Reject if token is missing
   if (!token) return res.status(401).send('Missing token');
@@ -79,7 +107,7 @@ router.post('/update', async (req, res) => {
 
   // Extract token from Authorization header or body
   const header = req.get('Authorization') || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : req.body.token;
+  const token = req.cookies?.token || (header.startsWith('Bearer ') ? header.slice(7) : req.body.token);
 
   // Reject if token is missing
   if (!token) return res.status(401).send('Missing token');
@@ -125,16 +153,26 @@ router.post('/register', async (req, res) => {
     // Generate JWT token for immediate login
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    // Redirect to profile page with token
-    res.redirect(`/profile?token=${token}`);
+    // Set token as HttpOnly cookie and redirect to profile
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    res.redirect('/profile');
   } catch (err) {
     console.error('Registration error:', err);
     res.status(500).send('Registration failed');
   }
 });
 
+/* ===========================
+   Logout (clear cookie)
+=========================== */
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  return res.redirect('/');
+});
+
 module.exports = router;
-
-const bcrypt = require('bcryptjs');
-
-const isMatch = await bcrypt.compare(password, user.password);

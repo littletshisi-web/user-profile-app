@@ -320,23 +320,7 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Extract token from URL query string and store it in localStorage
-    const urlToken = new URLSearchParams(window.location.search).get('token');
-    if (urlToken) localStorage.setItem('token', urlToken);
-
-    // Retrieve token from localStorage or sessionStorage
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-
-    // If no token is found, show an error message and block access
-    if (!token) {
-      document.body.innerHTML = `
-        <div class="profile-container">
-          <div class="alert alert-danger">
-            <i class="fas fa-exclamation-triangle me-2"></i>No token provided. Please login first.
-          </div>
-        </div>`;
-      return;
-    }
+    // This app now uses HttpOnly cookie for token, so no token is read from URL/localStorage
 
     // Fetch user data and populate the form
     async function loadUser() {
@@ -344,9 +328,9 @@
         const res = await fetch('/getUser', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({})
         });
 
@@ -388,9 +372,9 @@
         const res = await fetch('/update', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify(payload)
         });
 
@@ -422,9 +406,8 @@
     };
 
     // Handle logout: clear token and redirect to home
-    document.getElementById('logoutBtn').onclick = () => {
-      localStorage.removeItem('token');
-      sessionStorage.removeItem('token');
+    document.getElementById('logoutBtn').onclick = async () => {
+      await fetch('/logout', { method: 'POST', credentials: 'include' });
       window.location.href = '/';
     };
   });

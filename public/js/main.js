@@ -1,8 +1,8 @@
 // Wait until the DOM is fully loaded before executing the script
 document.addEventListener('DOMContentLoaded', () => {
   
-  // Extract the 'token' parameter from the URL query string
-  const token = new URLSearchParams(window.location.search).get('token');
+  // This app uses HttpOnly cookie for auth token (no token in URL)
+  const token = null;
 
   // Get the form element by its ID
   const form = document.getElementById('profileForm');
@@ -14,17 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Convert form data into a plain JavaScript object
     const formData = Object.fromEntries(new FormData(form).entries());
 
-    // Include the token in the payload to be sent to the server
-    const payload = { ...formData, token };
-
     // Send the payload to the '/update' endpoint using a POST request
     const res = await fetch('/update', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Specify JSON content type
-        'Authorization': `Bearer ${token}`  // Include token in Authorization header
-      },
-      body: JSON.stringify(payload) // Convert payload to JSON string
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(formData)
     });
 
     // Display the server response message to the user

@@ -1,3 +1,16 @@
+# Basic Render service definition
+services:
+  - type: web
+    name: user-profile-app
+    env: node
+    plan: starter
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
 services:
   - type: web
     name: user-profile-app

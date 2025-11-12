@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "user-profile-app",
   "version": "1.0.0",
   "description": "Simple user profile demo with Express and MongoDB",
@@ -23,3 +23,4 @@
     "nodemon": "^3.1.11"
   }
 }
+

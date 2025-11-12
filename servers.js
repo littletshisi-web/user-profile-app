@@ -1,9 +1,26 @@
-// Import required modules
+/*
+  servers.js
+  - Application entrypoint for the User Profile app
+  - Responsibilities:
+    * Load configuration from environment (.env)
+    * Configure Express middleware and static file serving
+    * Connect to MongoDB via Mongoose
+    * Mount route handlers (authentication/profile)
+    * Start HTTP server and expose a /health endpoint
+
+  Environment variables used:
+    - MONGO_URI : MongoDB connection string
+    - PORT      : Port to listen on (defaults to 3000)
+    - NODE_ENV  : 'production' toggles secure cookie behavior
+
+  Keep this file small: move business logic into route modules
+*/
 const express = require('express');           // Web framework for building APIs
 const mongoose = require('mongoose');         // ODM for MongoDB
 const dotenv = require('dotenv');             // Loads environment variables from .env file
 const authRoutes = require('./routes/auth');  // Import authentication routes
 const path = require('path');                 // Utility for handling file paths
+const cookieParser = require('cookie-parser'); // Parse cookies for HttpOnly token
 
 // Load environment variables from .env
 dotenv.config();
@@ -14,6 +31,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
+
+// Parse cookies (for HttpOnly JWT cookie)
+app.use(cookieParser());
 
 // Middleware to parse URL-encoded data (e.g., form submissions)
 app.use(express.urlencoded({ extended: true }));
