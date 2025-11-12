@@ -39,8 +39,9 @@ app.get('/health', (req, res) => {
 console.log('Connecting to MongoDB:', process.env.MONGO_URI);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  // Note: MongoDB Atlas URIs (mongodb+srv://) automatically enforce TLS/SSL encryption
   .then(() => {
-    console.log(' Connected to MongoDB successfully');
+    console.log('✓ Connected to MongoDB successfully');
     app.use('/', authRoutes);
     const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`✓ Server running on http://localhost:${PORT}`);
