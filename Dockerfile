@@ -1,12 +1,14 @@
-# Multi-stage build for optimized production image
+﻿# Multi-stage build for optimized production image
 # Stage 1: Build dependencies
 FROM node:25-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files
 COPY package.json package-lock.json ./
-RUN npm ci --only=production
+
+# Install production dependencies only
+RUN npm install --production
 
 # Stage 2: Production image
 FROM node:25-alpine

@@ -1,13 +1,12 @@
-# Git and version control
+﻿# Git and version control
 .git
 .gitignore
 .github
 
-# Dependencies
+# Dependencies (keep package-lock.json for Docker)
 node_modules
 npm-debug.log
 yarn-error.log
-package-lock.json
 yarn.lock
 
 # Environment variables (never bake secrets into the image)
@@ -46,16 +45,6 @@ jest.config.js
 .github
 .gitlab-ci.yml
 .circleci
-
-# Docker build context size optimization
-.git
-.gitignore
-README.md
-LICENSE
-CONTRIBUTING.md
-.dockerignore
-Dockerfile
-docker-compose.yml
 
 # Test files
 __tests__
