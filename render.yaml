@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: user-profile-app
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    rootDir: .
+    envVars:
+      - key: NODE_VERSION
+        value: 20.10.0
