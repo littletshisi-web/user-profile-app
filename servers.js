@@ -43,12 +43,12 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     console.log(' Connected to MongoDB successfully');
     app.use('/', authRoutes);
     const server = app.listen(PORT, '0.0.0.0', () => {
-      console.log( Server running on http://localhost:);
-      console.log( Health check: http://localhost:/health);
+      console.log(`✓ Server running on http://localhost:${PORT}`);
+      console.log(`✓ Health check: http://localhost:${PORT}/health`);
     });
     server.on('error', (err) => {
       if (err.code === 'EADDRINUSE') {
-        console.error( Port  is already in use);
+        console.error(`✗ Port ${PORT} is already in use`);
         process.exit(1);
       }
     });
