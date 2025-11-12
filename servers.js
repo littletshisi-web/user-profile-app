@@ -21,6 +21,9 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+// Note: Some managed Node runtimes restrict certain crypto APIs during early middleware execution.
+// Avoid using crypto.randomBytes synchronously in generic middleware.
+// We'll fall back to a lightweight token generator.
 
 dotenv.config();
 
@@ -54,9 +57,22 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Lightweight non-cryptographic token to avoid runtime crypto issues on some platforms.
+// For true CSRF protection, integrate a dedicated CSRF library (e.g., csurf) with a proper secret.
 app.use((req, res, next) => {
-  res.locals.csrfToken = crypto.randomBytes(32).toString('hex');
-  res.cookie('csrfToken', res.locals.csrfToken, { httpOnly: false, sameSite: 'lax' });
+  try {
+    // Use Web Crypto if available, otherwise fallback to a timestamp-based token.
+    const token = (globalThis.crypto && globalThis.crypto.randomUUID)
+      ? globalThis.crypto.randomUUID().replace(/-/g, '')
+      : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    res.locals.csrfToken = token;
+    res.cookie('csrfToken', token, { httpOnly: false, sameSite: 'lax' });
+  } catch (e) {
+    // Final fallback
+    const token = (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    res.locals.csrfToken = token;
+    res.cookie('csrfToken', token, { httpOnly: false, sameSite: 'lax' });
+  }
   next();
 });
 
